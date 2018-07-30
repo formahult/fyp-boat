@@ -83,7 +83,7 @@ fn main()
         handle.spawn(write_stream);
         Ok( () )
         });
-    
+
     core.run(Future::join(boat_server, gcs_server)).unwrap();
 }
 
@@ -111,7 +111,7 @@ impl MessageCache
         {
         // MAVLINK_MSG_ID_GLOBAL_POSITION_INT - Current GPS coords as integers
         // - Cache raw message, record decoded
-        33 => { 
+        33 => {
             let msg = mavlink::GlobalPositionInt::decode(message.get_data());
             let _ = writeln!(self.log.lock().unwrap(), "[{}] {:?}", message.src.0, msg);
             self.cached_messages.lock().unwrap().update(33, message);
@@ -137,7 +137,7 @@ impl MessageCache
                 }
             }
         }
-        Box::new( S(self.to_boat_messages.clone()) )
+        Box::new( S(self.to_boat_messages.clone(), self.index) );
         panic!("");
     }
 
@@ -249,7 +249,7 @@ impl<S> MavlinkSocket<S>
 impl<S> ::futures::Stream for MavlinkSocket<S>
 where
     S: ::tokio_io::AsyncRead
-{ 
+{
     type Item = MavLinkMessage;
     type Error = ::std::io::Error;
     fn poll(&mut self) -> ::futures::Poll<Option<MavLinkMessage>,::std::io::Error>
@@ -404,4 +404,3 @@ impl ::std::fmt::Debug for MavLinkMessage
         Ok( () )
     }
 }
-

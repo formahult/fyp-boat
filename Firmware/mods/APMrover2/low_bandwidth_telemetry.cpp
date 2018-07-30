@@ -21,7 +21,7 @@ void LowBandwidthTelemetry::setup()
         // NOTE: STREAM_PARAMS only gets sent when there's a new param set.
         if( i == GCS_MAVLINK::STREAM_PARAMS )
             continue;
-        m_gcs.streamRates[i] = 0;
+        m_gcs.setStreamRatei(i,0);
     }
 }
 
@@ -109,4 +109,3 @@ void LowBandwidthTelemetry::reset_timer()
     m_min_since_ping = 0;
     m_ms_since_ping = 0;
 }
-
